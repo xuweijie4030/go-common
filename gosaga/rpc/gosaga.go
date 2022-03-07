@@ -1,14 +1,12 @@
 package rpc
 
 import (
-	"sunshine/app/validation"
 	"context"
 	"github.com/carefreex-io/config"
 	"github.com/carefreex-io/rpcxclient"
+	"github.com/xuweijie4030/go-common/gosaga/proto"
 	"sync"
 	"time"
-	"gosaga/app/service"
-	"github.com/xuweijie4030/go-common/gosaga/proto"
 )
 
 type Client struct {
@@ -59,6 +57,10 @@ func (c *Client) SubmitSaga(ctx context.Context, request *proto.SubmitSagaReques
 
 func (c *Client) RecoverSaga(ctx context.Context, request *proto.RecoverSagaRequest, response *proto.RecoverSagaResponse) (err error) {
 	return c.XClient.Call(ctx, "RecoverSaga", request, response)
+}
+
+func (c *Client) GetRunningSagaId(ctx context.Context, request *proto.GetRunningSagaIdRequest, response *proto.GetRunningSagaIdResponse) (err error) {
+	return c.XClient.Call(ctx, "GetRunningSagaId", request, response)
 }
 
 
