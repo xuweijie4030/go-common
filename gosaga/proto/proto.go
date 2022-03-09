@@ -3,9 +3,9 @@ package proto
 import "time"
 
 type SagaInfo struct {
-	ExecType             int           `json:"exec_type"`
-	GlobalCompensateType int           `json:"global_compensate_type"` // 定义Saga中所有事务的补偿类型，优先级高于事务内部的补偿类型，默认为0
-	Transaction          []Transaction `json:"transaction"`
+	ExecType             int           `json:"exec_type" binding:"oneof=0 1"`                // 0-serial 1-concurrent
+	GlobalCompensateType int           `json:"global_compensate_type" binding:"oneof=0 1 2"` // 定义Saga中所有事务的补偿类型，优先级高于事务内部的补偿类型，默认为0
+	Transaction          []Transaction `json:"transaction" binding:"required,min=2"`
 }
 
 type (
@@ -25,10 +25,10 @@ type (
 )
 
 type TransactionBaseOption struct {
-	TimeoutToFail  time.Duration `json:"timeout_to_fail"` // second, default 3 second
-	RetryInterval  time.Duration `json:"retry_interval"`  // second, default 1 second
-	CompensateType int           `json:"compensate_type"` // 1-backward recovery 2-forward recovery
-	MaxRetryTimes  int           `json:"max_retry_times"` // max retry times, default 3 times, auto rollback after reaching the number of MaxRetryTimes
+	TimeoutToFail  time.Duration `json:"timeout_to_fail"`                                                        // second, default 3 second
+	RetryInterval  time.Duration `json:"retry_interval"`                                                         // second, default 1 second
+	CompensateType int           `json:"compensate_type" binding:"required_if=GlobalCompensateType 0,oneof=1 2"` // 1-backward recovery 2-forward recovery
+	MaxRetryTimes  int           `json:"max_retry_times"`                                                        // max retry times, default 3 times, auto rollback after reaching the number of MaxRetryTimes
 }
 
 type Transaction struct {
@@ -79,4 +79,3 @@ type (
 		SagaId []int
 	}
 )
-

@@ -32,3 +32,12 @@ const (
 	DefaultTransactionCompensateType = BackwardCompensateType
 	DefaultGlobalCompensateType      = 0
 )
+
+const (
+	SagaCreatedEvent = iota
+	TransactionBeginEvent
+	TransactionEndEvent
+	TransactionAbortedEvent
+	TransactionCompensateEvent
+	SagaEndEvent
+)
